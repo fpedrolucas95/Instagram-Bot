@@ -72,7 +72,7 @@ Adorei
 ## Como executar a aplicação
 
 1.  Certifique-se que o arquivo `locations.txt` que criou anteriormente está na mesma pasta que a aplicação.
-2. Execute a aplicação conforme mencionado acima.
+2. Execute a aplicação conforme explicado anteriormente.
 3. Insira seu nome de usuário e senha do Instagram nos campos fornecidos.
 4.  Configure as porcentagens para as ações de comentar, seguir e taxas de engajamento.
 5.  Escolha uma localização para focar as interações.
