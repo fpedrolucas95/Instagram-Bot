@@ -80,9 +80,9 @@ Adorei
 
 ## Porcentagens recomendadas
 
-1. **Porcentágem de comentários:** 40
-2. **Porcentágem de seguir:** 25
-3. **Porcentágem de engajamento:** Pode variar de acordo com a localização, teste o número que melhor funciona para você
+1. **Porcentagem de comentários:** 40
+2. **Porcentagem de seguir:** 25
+3. **Porcentagem de engajamento:** Pode variar de acordo com a localização, teste o número que melhor funciona para você
 
 ## Lógica de Funcionamento
 
