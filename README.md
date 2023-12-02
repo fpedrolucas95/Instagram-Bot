@@ -62,8 +62,8 @@ São Paulo, SP:112047398814697
 - Create a `txt` file in any folder on your computer. If you don't have this file yet, you can create it using a text editor like Notepad on Windows or TextEdit on macOS.
 - In the file, you will add one comment per line. For example:
 ```bash
-Muito bom
-Adorei
+Good!
+I liked!
 ```
 - Open the application following the previous steps.
 - Check the Enable Comments checkbox.
