@@ -34,29 +34,29 @@ class AplicativoBotInstagram(QMainWindow):
         main_layout = QVBoxLayout()
 
         # Nome de usuário
-        username_label = QLabel("Nome de Usuário do Instagram:", central_widget)
+        username_label = QLabel("Instagram username:", central_widget)
         main_layout.addWidget(username_label)
         self.username_input = QLineEdit(central_widget)
         main_layout.addWidget(self.username_input)
 
         # Senha
-        password_label = QLabel("Senha do Instagram:", central_widget)
+        password_label = QLabel("Instagram password:", central_widget)
         main_layout.addWidget(password_label)
         self.password_input = QLineEdit(central_widget)
         self.password_input.setEchoMode(QLineEdit.Password)
         main_layout.addWidget(self.password_input)
 
         # Botão comentário
-        self.checkbox_comentarios = QCheckBox("Habilitar Comentários", central_widget)
+        self.checkbox_comentarios = QCheckBox("Enable Comments", central_widget)
         main_layout.addWidget(self.checkbox_comentarios)
 
         # Porcentagens de Engajamento
-        grupo_porcentagem = QGroupBox("Porcentagens de Engajamento", central_widget)
+        grupo_porcentagem = QGroupBox("Engagement Percentages", central_widget)
         layout_porcentagem = QVBoxLayout()
         layout_porcentagem.setAlignment(Qt.AlignCenter)
 
         # Porcentagem de Comentários
-        porcentagem_comentarios_label = QLabel("Porcentagem de Comentários:", grupo_porcentagem)
+        porcentagem_comentarios_label = QLabel("Comment Percentage:", grupo_porcentagem)
         layout_porcentagem.addWidget(porcentagem_comentarios_label)
         self.porcentagem_comentarios_spinbox = QSpinBox(grupo_porcentagem)
         self.porcentagem_comentarios_spinbox.setRange(0, 100)
@@ -64,14 +64,14 @@ class AplicativoBotInstagram(QMainWindow):
         layout_porcentagem.addWidget(self.porcentagem_comentarios_spinbox)
 
         # Porcentagem de Seguidores
-        porcentagem_seguir_label = QLabel("Porcentagem de Seguir:", grupo_porcentagem)
+        porcentagem_seguir_label = QLabel("Follow Percentage:", grupo_porcentagem)
         layout_porcentagem.addWidget(porcentagem_seguir_label)
         self.porcentagem_seguir_spinbox = QSpinBox(grupo_porcentagem)
         self.porcentagem_seguir_spinbox.setRange(0, 100)
         layout_porcentagem.addWidget(self.porcentagem_seguir_spinbox)
 
         # Taxa Mínima de Engajamento
-        taxa_engajamento_label = QLabel("Taxa Mínima de Engajamento (%):", grupo_porcentagem)
+        taxa_engajamento_label = QLabel("Minimum Engagement Rate (%):", grupo_porcentagem)
         layout_porcentagem.addWidget(taxa_engajamento_label)
         self.taxa_engajamento_spinbox = QSpinBox(grupo_porcentagem)
         # Ajuste o limite conforme necessário
@@ -81,17 +81,17 @@ class AplicativoBotInstagram(QMainWindow):
         main_layout.addWidget(grupo_porcentagem)
 
         # Comentários
-        label_lista_comentarios = QLabel("Lista de Comentários:", central_widget)
+        label_lista_comentarios = QLabel("Comment List:", central_widget)
         main_layout.addWidget(label_lista_comentarios)
         self.textedit_lista_comentarios = QTextEdit(central_widget)
         main_layout.addWidget(self.textedit_lista_comentarios)
-        botao_adicionar_comentario = QPushButton("Adicionar Comentário", central_widget)
+        botao_adicionar_comentario = QPushButton("Add Comment", central_widget)
         main_layout.addWidget(botao_adicionar_comentario)
         botao_adicionar_comentario.clicked.connect(self.adicionar_comentario)
         self.checkbox_comentarios.stateChanged.connect(self.atualizar_estado_caixa_comentarios)
 
         # Localização
-        label_localizacao = QLabel("Selecionar Localização:", central_widget)
+        label_localizacao = QLabel("Select Location:", central_widget)
         main_layout.addWidget(label_localizacao)
         self.combobox_localizacao = QComboBox(central_widget)
         self.preencher_combobox_localizacao()
@@ -103,19 +103,19 @@ class AplicativoBotInstagram(QMainWindow):
         main_layout.addWidget(self.running_label)
 
         # Botão Iniciar
-        self.botao_iniciar = QPushButton("Iniciar Bot", central_widget)
+        self.botao_iniciar = QPushButton("Start Bot", central_widget)
         main_layout.addWidget(self.botao_iniciar)
         self.botao_iniciar.clicked.connect(self.iniciar_bot)
 
         # Botão Exibir Log
-        botao_exibir_log = QPushButton("Exibir Log da Aplicação", central_widget)
+        botao_exibir_log = QPushButton("Show Application Log", central_widget)
         main_layout.addWidget(botao_exibir_log)
         botao_exibir_log.clicked.connect(self.exibir_log)
 
         # Definir Layout
         central_widget.setLayout(main_layout)
         self.janela_log = QTextBrowser()  # Janela para exibir logs
-        self.janela_log.setWindowTitle("Log da Aplicação")
+        self.janela_log.setWindowTitle("Application Log")
         self.janela_log.setGeometry(100, 100, 600, 400)
 
         # Conectar sinais para atualizar o log na GUI
@@ -127,7 +127,7 @@ class AplicativoBotInstagram(QMainWindow):
         self.textedit_lista_comentarios.textChanged.connect(self.validar_campos)
 
     def adicionar_comentario(self):
-        arquivo_comentario, ok = QFileDialog.getOpenFileName(self, "Selecionar Arquivo de Comentário", "", "Arquivos de Texto (*.txt);;Todos os Arquivos (*)")
+        arquivo_comentario, ok = QFileDialog.getOpenFileName(self, "Select Comment File", "", "Text Files (*.txt);;All Files (*)")
         if ok:
             with open(arquivo_comentario, "r") as arquivo:
                 texto_comentario = arquivo.read()
@@ -148,8 +148,7 @@ class AplicativoBotInstagram(QMainWindow):
                         nome_localizacao, codigo_localizacao = partes
                         self.combobox_localizacao.addItem(nome_localizacao)
         except FileNotFoundError:
-            self.sinal_log.anexar_log.emit(
-                "Arquivo 'locations.txt' não encontrado.")
+            self.sinal_log.anexar_log.emit("File 'locations.txt' not found.")
 
     def validar_campos(self):
         nome_usuario = self.username_input.text()
@@ -174,13 +173,13 @@ class AplicativoBotInstagram(QMainWindow):
         self.bot_thread.run = self.executar_bot
         self.bot_thread.start()
         if self.running_label is not None:
-            self.running_label.setText("Executando o bot...")
+            self.running_label.setText("Running the bot...")
 
         self.exibir_log()
 
     def executar_bot(self):
-        self.sinal_log.anexar_log.emit("InstaBot Versão 1.1")
-        self.sinal_log.anexar_log.emit("Bot iniciado.")
+        self.sinal_log.anexar_log.emit("InstaBot Version 1.1")
+        self.sinal_log.anexar_log.emit("Bot started.")
 
         # Inicializar instância do Cliente do instagrapi
         cl = Client()
@@ -188,12 +187,12 @@ class AplicativoBotInstagram(QMainWindow):
         # Tenta fazer login com tratamento de exceções
         try:
             cl.login(self.username_input.text(), self.password_input.text())
-            self.sinal_log.anexar_log.emit(f"Login realizado na conta {self.username_input.text()}\n")
+            self.sinal_log.anexar_log.emit(f"Logged in to the account {self.username_input.text()}\n")
         except instagrapi.exceptions.BadPassword:
-            self.sinal_log.anexar_log.emit("Senha incorreta. Por favor, tente novamente.")
+            self.sinal_log.anexar_log.emit("Incorrect password. Please try again.")
             return
         except Exception as e:
-            self.sinal_log.anexar_log.emit(f"Erro ao fazer login: {e}")
+            self.sinal_log.anexar_log.emit(f"Error logging in: {e}")
             return
 
         # Lê códigos de localização do arquivo locations.txt
@@ -240,11 +239,11 @@ class AplicativoBotInstagram(QMainWindow):
 
         def pausa_humana():
             tempo_de_espera = random.uniform(8, 16)
-            self.sinal_log.anexar_log.emit(f"\nAguardando {tempo_de_espera:.2f} segundos antes da próxima ação.")
+            self.sinal_log.anexar_log.emit(f"\nWaiting for {tempo_de_espera:.2f} seconds before the next action.")
             time.sleep(tempo_de_espera)
 
         def fazer_uma_pausa():
-            self.sinal_log.anexar_log.emit("\nIniciando uma pausa de 1:30 minutos.")
+            self.sinal_log.anexar_log.emit("\nStarting a 1:30-minute break.")
             time.sleep(90)
 
         def usuário_atende_critérios(informações_usuario, cl):
@@ -278,7 +277,7 @@ class AplicativoBotInstagram(QMainWindow):
 
             if not critérios_atendidos:
                 # Se o usuário não atende aos critérios, pula para o próximo usuário
-                self.sinal_log.anexar_log.emit(f"\nUsuário {informações_usuario.username} não atendeu à taxa mínima de engajamento, pulando...")
+                self.sinal_log.anexar_log.emit(f"\nUser {informações_usuario.username} did not meet the minimum engagement rate, skipping...")
                 return False, taxa_engajamento, ultima_data_postagem
             return True, taxa_engajamento, ultima_data_postagem
 
@@ -286,7 +285,7 @@ class AplicativoBotInstagram(QMainWindow):
             nonlocal proximo_tempo_pausa
             # Obter o nome da localização atualmente selecionada
             nome_localizacao = self.combobox_localizacao.currentText()
-            self.sinal_log.anexar_log.emit(f"Procurando publicações pela localização de {nome_localizacao}")
+            self.sinal_log.anexar_log.emit(f"Searching for posts at the location of {nome_localizacao}")
             publicacoes = (cl.location_medias_recent if recente else cl.location_medias_top)(codigo_localizacao, amount=50)
             for publicacao in publicacoes:
                 interacao_feita = False
@@ -296,21 +295,21 @@ class AplicativoBotInstagram(QMainWindow):
                         informacoes_usuario = cl.user_info(id_usuario)
                         criterios_atendidos, taxa_engajamento, ultima_data_postagem = usuário_atende_critérios(informacoes_usuario, cl)
                         if criterios_atendidos:
-                            self.sinal_log.anexar_log.emit(f"\nTaxa de engajamento do usuário {publicacao.user.username} é de {round(taxa_engajamento)}%, e sua última postagem foi em {ultima_data_postagem.strftime('%d/%m/%Y')}")
+                            self.sinal_log.anexar_log.emit(f"\nUser {publicacao.user.username} has an engagement rate of {round(taxa_engajamento)}%, and their last post was on {ultima_data_postagem.strftime('%d/%m/%Y')}")
                             cl.media_like(publicacao.id)
                             # Construindo a URL da publicação
                             link_publicacao = f"https://www.instagram.com/p/{publicacao.code}/"
-                            self.sinal_log.anexar_log.emit(f"Curtiu a publicação de {publicacao.user.username}: {link_publicacao}.")
+                            self.sinal_log.anexar_log.emit(f"Liked a post by {publicacao.user.username}: {link_publicacao}.")
                             
                             # Verificando e curtindo o primeiro story do usuário
                             stories = cl.user_stories(id_usuario)
                             if stories:
                                 primeiro_story = stories[0]
                                 cl.story_like(primeiro_story.id)
-                                self.sinal_log.anexar_log.emit(f"Curtiu o primeiro story de {publicacao.user.username}.")
+                                self.sinal_log.anexar_log.emit(f"Liked the first story of {publicacao.user.username}.")
                             else:
                                 # Tratamento para o caso de não haver stories
-                                self.sinal_log.anexar_log.emit(f"Não há stories disponíveis para {publicacao.user.username}.")
+                                self.sinal_log.anexar_log.emit(f"No stories available for {publicacao.user.username}.")
 
                             usuarios_interagidos.add(str(id_usuario))
                             interacao_feita = True
@@ -318,27 +317,27 @@ class AplicativoBotInstagram(QMainWindow):
 
                             if deve_seguir():
                                 cl.user_follow(id_usuario)
-                                self.sinal_log.anexar_log.emit(f"Seguindo {publicacao.user.username}.")
+                                self.sinal_log.anexar_log.emit(f"Following {publicacao.user.username}.")
 
                             if not publicacao.comments_disabled and deve_comentar():
                                 comentario = random.choice(comentarios)
                                 cl.media_comment(publicacao.id, comentario)
-                                self.sinal_log.anexar_log.emit(f"Comentando '{comentario}' na publicação de {publicacao.user.username}.")
+                                self.sinal_log.anexar_log.emit(f"Commented '{comentario}' on {publicacao.user.username}.")
 
                         # Se uma interação foi feita, esperar entre 8 e 16 segundos
                         if interacao_feita:
                             pausa_humana()
                         else:
-                            self.sinal_log.anexar_log.emit(f"Nenhuma nova interação com {publicacao.user.username}, avançando imediatamente...")
+                            self.sinal_log.anexar_log.emit(f"No new interaction with {publicacao.user.username}, advancing immediately...")
 
                         if datetime.now() >= proximo_tempo_pausa:
                             fazer_uma_pausa()
                             proximo_tempo_pausa = datetime.now() + timedelta(minutes=30)
 
                 except instagrapi.exceptions.MediaUnavailable:
-                    self.sinal_log.anexar_log.emit("Erro: A publicação foi deletada e não está mais disponível.")
+                    self.sinal_log.anexar_log.emit("Error: The post has been deleted and is no longer available.")
                 except Exception as e:
-                    self.sinal_log.anexar_log.emit(f"Erro inesperado: {e}")
+                    self.sinal_log.anexar_log.emit(f"Unexpected error: {e}")
 
         def save_interacted_users():
             config = configparser.ConfigParser()
@@ -368,7 +367,7 @@ class AplicativoBotInstagram(QMainWindow):
 
         save_interacted_users()  # Salva usuários interagidos no final da execução
         self.sinal_log.anexar_log.emit(
-            "O script atingiu o tempo de execução definido. Encerrando...")
+            "The script has reached the set execution time. Shutting down...")
         cl.logout()
 
     def obter_codigo_localizacao(self, nome_localizacao):
@@ -380,7 +379,7 @@ class AplicativoBotInstagram(QMainWindow):
                         return codigo
         except FileNotFoundError:
             self.sinal_log.anexar_log.emit(
-                "Arquivo 'locations.txt' não encontrado.")
+                "File 'locations.txt' not found.")
         return None
 
     def exibir_log(self):
