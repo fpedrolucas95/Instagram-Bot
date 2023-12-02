@@ -1,8 +1,8 @@
 import sys
 import configparser
 import os
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QSpinBox, QCheckBox, QTextEdit, QVBoxLayout, QWidget, QGroupBox, QFileDialog, QComboBox, QTextBrowser
-from PyQt6.QtCore import pyqtSignal, QObject, QThread, Qt
+from PyQt5.QtCore import pyqtSignal, QObject, QThread, Qt
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QSpinBox, QCheckBox, QTextEdit, QVBoxLayout, QWidget, QGroupBox, QFileDialog, QComboBox, QTextBrowser
 import random
 import time
 import instagrapi
@@ -20,9 +20,13 @@ class AplicativoBotInstagram(QMainWindow):
         self.sinal_log = SinalLog()
         self.setWindowTitle("InstaBot")
         self.setFixedSize(250, 700)
-        self.running_label = None 
+        self.running_label = None
         self.initUI()
-        self.ini_file_path = os.path.join(os.getcwd(), f"{self.username_input.text()}.ini")
+        self.ini_file_path = os.path.join(
+            os.getcwd(), f"{self.username_input.text()}.ini")
+        
+    def atualizar_estado_caixa_comentarios(self):
+        self.porcentagem_comentarios_spinbox.setEnabled(self.checkbox_comentarios.isChecked())
 
     def initUI(self):
         central_widget = QWidget(self)
@@ -39,19 +43,24 @@ class AplicativoBotInstagram(QMainWindow):
         password_label = QLabel("Senha do Instagram:", central_widget)
         main_layout.addWidget(password_label)
         self.password_input = QLineEdit(central_widget)
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_input.setEchoMode(QLineEdit.Password)
         main_layout.addWidget(self.password_input)
+
+        # Botão comentário
+        self.checkbox_comentarios = QCheckBox("Habilitar Comentários", central_widget)
+        main_layout.addWidget(self.checkbox_comentarios)
 
         # Porcentagens de Engajamento
         grupo_porcentagem = QGroupBox("Porcentagens de Engajamento", central_widget)
-        layout_porcentagem = QVBoxLayout()  # Initialize the layout first
-        layout_porcentagem.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Then set the alignment
+        layout_porcentagem = QVBoxLayout()
+        layout_porcentagem.setAlignment(Qt.AlignCenter)
 
         # Porcentagem de Comentários
         porcentagem_comentarios_label = QLabel("Porcentagem de Comentários:", grupo_porcentagem)
         layout_porcentagem.addWidget(porcentagem_comentarios_label)
         self.porcentagem_comentarios_spinbox = QSpinBox(grupo_porcentagem)
         self.porcentagem_comentarios_spinbox.setRange(0, 100)
+        self.porcentagem_comentarios_spinbox.setEnabled(self.checkbox_comentarios.isChecked())
         layout_porcentagem.addWidget(self.porcentagem_comentarios_spinbox)
 
         # Porcentagem de Seguidores
@@ -65,14 +74,13 @@ class AplicativoBotInstagram(QMainWindow):
         taxa_engajamento_label = QLabel("Taxa Mínima de Engajamento (%):", grupo_porcentagem)
         layout_porcentagem.addWidget(taxa_engajamento_label)
         self.taxa_engajamento_spinbox = QSpinBox(grupo_porcentagem)
-        self.taxa_engajamento_spinbox.setRange(0, 100)  # Ajuste o limite conforme necessário
+        # Ajuste o limite conforme necessário
+        self.taxa_engajamento_spinbox.setRange(0, 100)
         layout_porcentagem.addWidget(self.taxa_engajamento_spinbox)
         grupo_porcentagem.setLayout(layout_porcentagem)
         main_layout.addWidget(grupo_porcentagem)
-        
+
         # Comentários
-        self.checkbox_comentarios = QCheckBox("Habilitar Comentários", central_widget)
-        main_layout.addWidget(self.checkbox_comentarios)
         label_lista_comentarios = QLabel("Lista de Comentários:", central_widget)
         main_layout.addWidget(label_lista_comentarios)
         self.textedit_lista_comentarios = QTextEdit(central_widget)
@@ -80,6 +88,7 @@ class AplicativoBotInstagram(QMainWindow):
         botao_adicionar_comentario = QPushButton("Adicionar Comentário", central_widget)
         main_layout.addWidget(botao_adicionar_comentario)
         botao_adicionar_comentario.clicked.connect(self.adicionar_comentario)
+        self.checkbox_comentarios.stateChanged.connect(self.atualizar_estado_caixa_comentarios)
 
         # Localização
         label_localizacao = QLabel("Selecionar Localização:", central_widget)
@@ -89,9 +98,9 @@ class AplicativoBotInstagram(QMainWindow):
         main_layout.addWidget(self.combobox_localizacao)
 
         # Mensagem de execução do Bot
-        self.running_label = QLabel("", self) 
+        self.running_label = QLabel("", self)
         self.running_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        main_layout.addWidget(self.running_label) 
+        main_layout.addWidget(self.running_label)
 
         # Botão Iniciar
         self.botao_iniciar = QPushButton("Iniciar Bot", central_widget)
@@ -139,7 +148,8 @@ class AplicativoBotInstagram(QMainWindow):
                         nome_localizacao, codigo_localizacao = partes
                         self.combobox_localizacao.addItem(nome_localizacao)
         except FileNotFoundError:
-            self.sinal_log.anexar_log.emit("Arquivo 'locations.txt' não encontrado.")
+            self.sinal_log.anexar_log.emit(
+                "Arquivo 'locations.txt' não encontrado.")
 
     def validar_campos(self):
         nome_usuario = self.username_input.text()
@@ -148,6 +158,10 @@ class AplicativoBotInstagram(QMainWindow):
         porcentagem_seguir = self.porcentagem_seguir_spinbox.value()
         comentarios_habilitados = self.checkbox_comentarios.isChecked()
         lista_comentarios = self.textedit_lista_comentarios.toPlainText()
+
+        # Se o checkbox de comentários estiver desmarcado, não é necessário verificar a lista de comentários
+        if not comentarios_habilitados:
+            lista_comentarios = True
 
         if nome_usuario and senha and (porcentagem_comentarios >= 0) and (porcentagem_seguir >= 0) and (comentarios_habilitados or lista_comentarios):
             self.botao_iniciar.setEnabled(True)
@@ -162,8 +176,10 @@ class AplicativoBotInstagram(QMainWindow):
         if self.running_label is not None:
             self.running_label.setText("Executando o bot...")
 
+        self.exibir_log()
+
     def executar_bot(self):
-        self.sinal_log.anexar_log.emit("InstaBot Versão 1.0")
+        self.sinal_log.anexar_log.emit("InstaBot Versão 1.1")
         self.sinal_log.anexar_log.emit("Bot iniciado.")
 
         # Inicializar instância do Cliente do instagrapi
@@ -268,7 +284,8 @@ class AplicativoBotInstagram(QMainWindow):
 
         def interagir_com_localizacao(codigo_localizacao, recente=True):
             nonlocal proximo_tempo_pausa
-            nome_localizacao = self.combobox_localizacao.currentText()  # Obter o nome da localização atualmente selecionada
+            # Obter o nome da localização atualmente selecionada
+            nome_localizacao = self.combobox_localizacao.currentText()
             self.sinal_log.anexar_log.emit(f"Procurando publicações pela localização de {nome_localizacao}")
             publicacoes = (cl.location_medias_recent if recente else cl.location_medias_top)(codigo_localizacao, amount=50)
             for publicacao in publicacoes:
@@ -279,13 +296,23 @@ class AplicativoBotInstagram(QMainWindow):
                         informacoes_usuario = cl.user_info(id_usuario)
                         criterios_atendidos, taxa_engajamento, ultima_data_postagem = usuário_atende_critérios(informacoes_usuario, cl)
                         if criterios_atendidos:
-                            self.sinal_log.anexar_log.emit(
-                                f"\nTaxa de engajamento do usuário {publicacao.user.username} é de {round(taxa_engajamento)}%, "
-                                f"e sua última postagem foi em {ultima_data_postagem.strftime('%d/%m/%Y')}"
-                            )
+                            self.sinal_log.anexar_log.emit(f"\nTaxa de engajamento do usuário {publicacao.user.username} é de {round(taxa_engajamento)}%, e sua última postagem foi em {ultima_data_postagem.strftime('%d/%m/%Y')}")
                             cl.media_like(publicacao.id)
-                            self.sinal_log.anexar_log.emit(f"Curtiu a publicação de {publicacao.user.username}.")
-                            usuarios_interagidos.add(str(id_usuario)) 
+                            # Construindo a URL da publicação
+                            link_publicacao = f"https://www.instagram.com/p/{publicacao.code}/"
+                            self.sinal_log.anexar_log.emit(f"Curtiu a publicação de {publicacao.user.username}: {link_publicacao}.")
+                            
+                            # Verificando e curtindo o primeiro story do usuário
+                            stories = cl.user_stories(id_usuario)
+                            if stories:
+                                primeiro_story = stories[0]
+                                cl.story_like(primeiro_story.id)
+                                self.sinal_log.anexar_log.emit(f"Curtiu o primeiro story de {publicacao.user.username}.")
+                            else:
+                                # Tratamento para o caso de não haver stories
+                                self.sinal_log.anexar_log.emit(f"Não há stories disponíveis para {publicacao.user.username}.")
+
+                            usuarios_interagidos.add(str(id_usuario))
                             interacao_feita = True
                             save_interacted_users()
 
@@ -333,14 +360,15 @@ class AplicativoBotInstagram(QMainWindow):
 
         # Loop principal
         while datetime.now() < end_time:
-            recente = True 
+            recente = True
             interagir_com_localizacao(codigo_localizacao_selecionada, recente)
             recente = not recente
             if datetime.now() >= end_time:
                 break
 
         save_interacted_users()  # Salva usuários interagidos no final da execução
-        self.sinal_log.anexar_log.emit("O script atingiu o tempo de execução definido. Encerrando...")
+        self.sinal_log.anexar_log.emit(
+            "O script atingiu o tempo de execução definido. Encerrando...")
         cl.logout()
 
     def obter_codigo_localizacao(self, nome_localizacao):
@@ -351,7 +379,8 @@ class AplicativoBotInstagram(QMainWindow):
                     if nome == nome_localizacao:
                         return codigo
         except FileNotFoundError:
-            self.sinal_log.anexar_log.emit("Arquivo 'locations.txt' não encontrado.")
+            self.sinal_log.anexar_log.emit(
+                "Arquivo 'locations.txt' não encontrado.")
         return None
 
     def exibir_log(self):

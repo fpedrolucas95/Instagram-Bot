@@ -1,4 +1,4 @@
 instagrapi==2.0.0
-PyQt6==6.6.0
-PyQt6_sip==13.6.0
-Pillow>=8.1.1
+PyQt5==5.15.10
+PyQt5_sip==12.13.0
+Pillow==8.1.1
