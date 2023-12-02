@@ -18,7 +18,7 @@ O InstaBot é seu assistente pessoal no Instagram, dando suporte para que você 
 - **Registro de Atividades**: Mantenha-se informado sobre as ações do bot com um log de atividades.
 
 ## Pré-requisitos
-Para utilizar o InstaBot, é necessário ter o Python instalado, bem como as bibliotecas `PyQt6` para a interface de usuário e `instagrapi` para a interação com a API do Instagram.
+Para utilizar o InstaBot, é necessário ter o Python instalado, bem como as bibliotecas `PyQT5` para a interface de usuário e `instagrapi` para a interação com a API do Instagram.
 
 ## Instalação
 Clone o repositório ou faça o download do código-fonte, em seguida instale as dependências necessárias:
